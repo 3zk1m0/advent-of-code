@@ -1,7 +1,7 @@
 
 from itertools import permutations
 
-with open("day_5.txt") as f:
+with open("test.txt") as f:
     inputs = list(map(int, f.readline().strip().split(",")))
 
 STEPS = {1: 4, 2: 4, 3: 2, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4}
@@ -75,30 +75,40 @@ class IntCode_Computer:
     def put(self, obj):
         self.inputs.append(obj)
 
-if __name__ == "__main__":
-    # Part 1
-    pc = IntCode_Computer()
-    pc.put(1)
+# Part 1
+result = float("-inf")
+for config in permutations(range(5)):
+    amps = []
+    for i in range(len(config)):
+        amps.append(IntCode_Computer())
+        amps[i].put(config[i])
+
+    s0 = 0
+    for i in range(len(config)):
+        amps[i].put(s0)
+        s0 = amps[i].run()
+    if result < s0:
+        result = s0
+print(result)
+
+
+# Part 2
+result = float("-inf")
+for config in permutations(range(5, 10)):
+    amps = []
+    for i in range(len(config)):
+        amps.append(IntCode_Computer())
+        amps[i].put(config[i])
 
     s0 = 0
     halt = False
     while not halt:
+        for i in range(len(config)):
+            amps[i].put(s0)
             try:
-                s0 = pc.run()
+                s0 = amps[i].run()
             except EndOfCode:
                 halt = True
-    print(f'part 1 = {s0}')
-
-    # Part 2
-    pc = IntCode_Computer()
-    pc.put(5)
-
-    s0 = 0
-    halt = False
-    while not halt:
-            try:
-                s0 = pc.run()
-            except EndOfCode:
-                halt = True
-    print(f'part 2 = {s0}')
-
+    if result < s0:
+        result = s0
+print(result)
