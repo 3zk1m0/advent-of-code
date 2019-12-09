@@ -16,7 +16,7 @@ class IntCode_Computer:
         self.state = inputs[:]
         self.state += [0] * 10000
         self.pointer = 0
-        self.relative_base = 0
+        self.rel_base = 0
         self.inputs = []
 
     def run(self):
@@ -36,47 +36,45 @@ class IntCode_Computer:
             params = []
             for i in range(1, STEPS[opcode]):
                 if modes[i - 1] == 0:
-                    params.append(self.state[self.state[self.pointer + i]])
-                elif modes[i - 1] == 1:
                     params.append(self.state[self.pointer + i])
+                elif modes[i - 1] == 1:
+                    params.append(self.pointer + i)
                 elif modes[i - 1] == 2:
-                    params.append(self.state[self.state[self.pointer + i] + self.relative_base])
+                    params.append(self.state[self.pointer + i] + self.rel_base)
                 else:
                     raise AssertionError("Unknown")
 
 
-            if opcode == 1:
-                outpos = self.state[self.pointer + 3]
-                self.state[outpos] = params[0] + params[1]
-            elif opcode == 2:
-                outpos = self.state[self.pointer + 3]
-                self.state[outpos] = params[0] * params[1]
-            elif opcode == 3:
-                self.state[self.state[self.pointer + 1]] = self.inputs[0]
+            if opcode == 1: # addition
+                self.state[params[2]] = self.state[params[0]] + self.state[params[1]]
+            elif opcode == 2: # multiplication
+                self.state[params[2]] = self.state[params[0]] * self.state[params[1]]
+            elif opcode == 3: # input
+                self.state[params[0]] = self.inputs[0]
                 del self.inputs[0]
-            elif opcode == 4:
+            elif opcode == 4: # output
                 self.pointer += 2
-                return params[0]
-            elif opcode == 5:
-                if params[0] != 0:
-                    self.pointer = params[1]
+                return self.state[params[0]]
+            elif opcode == 5: #jump_if_not
+                if self.state[params[0]] != 0:
+                    self.pointer = self.state[params[1]]
                     continue
-            elif opcode == 6:
-                if params[0] == 0:
-                    self.pointer = params[1]
+            elif opcode == 6: #jump_if
+                if self.state[params[0]] == 0:
+                    self.pointer = self.state[params[1]]
                     continue
-            elif opcode == 7:
-                if params[0] < params[1]:
-                    self.state[self.state[self.pointer + 3]] = 1
+            elif opcode == 7: #smaller
+                if self.state[params[0]] < self.state[params[1]]:
+                    self.state[params[2]] = 1
                 else:
-                    self.state[self.state[self.pointer + 3]] = 0
-            elif opcode == 8:
-                if params[0] == params[1]:
-                    self.state[self.state[self.pointer + 3]] = 1
+                    self.state[params[2]] = 0
+            elif opcode == 8: # equal
+                if self.state[params[0]] == self.state[params[1]]:
+                    self.state[params[2]] = 1
                 else:
-                    self.state[self.state[self.pointer + 3]] = 0
-            elif opcode == 9:
-                self.relative_base += params[0]
+                    self.state[params[2]] = 0
+            elif opcode == 9: # new_rel_base
+                self.rel_base += self.state[params[0]]
 
             self.pointer += STEPS[opcode]
 
