@@ -24,6 +24,15 @@ if __name__ == "__main__":
     the_data[1] = 12
     the_data[2] = 2
 
+    test_data = list(the_data)
+    running = True
+    pointer = 0
+    while running:
+        running = operate(test_data, pointer)
+        pointer += 4
+
+    print(test_data[0])
+
     for noun in range(100):
         for verb in range(100):
             test_data = list(the_data)
