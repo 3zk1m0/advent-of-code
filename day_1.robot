@@ -18,7 +18,7 @@ Day 1 Part 1
     \   ${total}    Evaluate    ${result} + ${total}
     log     ${total}
 
-Day 1 Part
+Day 1 Part 2
     ${total}       Set Variable     0
     ${contents}    Get File         day_1.txt
     @{lines}       Split to lines   ${contents}

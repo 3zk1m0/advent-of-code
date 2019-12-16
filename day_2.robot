@@ -8,7 +8,7 @@ Library     Collections
 
 *** Test Cases ***
 
-Day 1 Part 1
+Day 2 Part 1
     
     ${contents}    Get File         day_2.txt
     @{state}       Split String   ${contents}   ,
@@ -24,7 +24,7 @@ Day 1 Part 1
     log     @{state}[0]
 
 
-Day 1 Part 2
+Day 2 Part 2
     Set Test Variable   ${the_noun}     0
     Set Test Variable   ${the_verb}     0
     For Noun
