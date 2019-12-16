@@ -1,6 +1,7 @@
 *.html
 *.xml
 
+__pycache__
 launch.json
 
 test.py
