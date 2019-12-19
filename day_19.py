@@ -116,7 +116,7 @@ def try_box(coordinates):
     if the_point == 1:
         bottom_point = test_for_coordinates((coordinates[0] - 99, coordinates[1]+99))
         if bottom_point == 1:
-            return (coordinates[0] -1 , coordinates[1])
+            return (coordinates[0] - 99 , coordinates[1])
 
     return -1    
 
@@ -134,13 +134,10 @@ def part_1():
                 grid[(x,y)] = ord("#")
             else:
                 grid[(x,y)] = ord(".")
-    draw_grid(grid)
-    print(count)
 
+    return count
 
-if __name__ == "__main__":
-
-
+def part_2():
     grid = {}
     y = 500
     leftmost = 0
@@ -158,30 +155,21 @@ if __name__ == "__main__":
                     rightmost = x-1
                     started = False
                 grid[(x,y)] = ord(".")
-    #draw_grid(grid)
 
     lastpos = (rightmost, 500)
     while True:
         lastpos = get_next_top(lastpos)
         result = try_box(lastpos)
         if result != -1:
-            print(lastpos)
-            print(calculate_value(lastpos))
-            break
+            return calculate_value(result)
 
-            """
-    grid = {}
-    for y in range(lastpos[1], lastpos[1]+100):
-        for x in range(370, lastpos[0]+10):
-                result = test_for_coordinates((x,y))
-                if result == 1:
-                    grid[(x,y)] = ord("#")
-                else:
-                    grid[(x,y)] = ord(".")
-    draw_grid(grid)
-"""
-    #3790981
-    quit()
+if __name__ == "__main__":
+
+    print('Part 1 = {}'.format(part_1()))
+    print('Part 2 = {}'.format(part_2()))
+
+
+
 
 
 
