@@ -46,19 +46,30 @@ def part_1():
     return cards.index(2019)
 
 def part_2():
-    cards = [x for x in range(10006+1)]
-
-    for (command, argument) in input_data:
-        if command == "deal into new stack":
-            cards = deal_into_new_stack(cards)
-        elif command == "cut":
-            cards = cut(cards, argument)
-        elif command == "deal with increment":
-            cards = deal_with_increment(cards, argument)
-
-    return cards[:100]
+    m = 119315717514047
+    n = 101741582076661
+    pos = 2020
+    shuffles = { 
+        'deal with increment ': lambda x,m,a,b: (a*x %m, b*x %m),
+        'deal into new stack': lambda _,m,a,b: (-a %m, (m-1-b)%m),
+        'cut ': lambda x,m,a,b: (a, (b-x)%m) 
+        }
+        
+    a,b = 1,0
+    with open('day_22.txt') as f:
+        for s in f.read().strip().split('\n'):
+            for name,fn in shuffles.items():
+                if s.startswith(name):
+                    arg = int(s[len(name):]) if name[-1] == ' ' else 0
+                    a,b = fn(arg, m, a, b)
+                    break
+    r = (b * pow(1-a, m-2, m)) % m
+    return f"Card at #{pos}: {((pos - r) * pow(a, n*(m-2), m) + r) % m}"
 
 if __name__ == "__main__":
-    print(part_1())
-    #print(part_2())
+    #print(part_1())
+    print(part_2())
+
+
+
 
